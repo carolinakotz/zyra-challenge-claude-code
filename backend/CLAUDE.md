@@ -51,7 +51,8 @@ Identificadores em português sem acento (ver seção "Idiomas" no `CLAUDE.md` d
 - **Métodos**: camelCase com verbo: `buscarPorId`, `listarTodos`, `inserir`, `atualizar`, `excluir`,
   `converterPontosEmSaldo`.
 - **Variáveis, atributos e campos JSON**: camelCase: `idUsuario`, `nomeMissao`, `saldo`.
-- **Tabelas e colunas Oracle**: UPPER_SNAKE_CASE: `MISSAO`, `ID_MISSAO`, `NOME_MISSAO`.
+- **Tabelas e colunas Oracle**: UPPER_SNAKE_CASE; tabelas com prefixo `ZYRA2_` (ver seção abaixo):
+  `ZYRA2_MISSAO`, `ID_MISSAO`, `NOME_MISSAO`.
 - **Endpoints**: minúsculos, no plural: `/missoes`, `/usuarios/{id}/conquistas`.
 - **Mensagens das exceções** (o usuário lê): com acento: `"Missão não encontrada."`,
   `"Pontos insuficientes para a conversão."`.
@@ -67,6 +68,16 @@ Identificadores em português sem acento (ver seção "Idiomas" no `CLAUDE.md` d
 | Id inexistente                                   | 404    | `RecursoNaoEncontradoException`, com mensagem em português com acento. |
 
 Quem traduz exceção em status é o `@RestControllerAdvice` do pacote `exception`, não o resource.
+
+## Prefixo `ZYRA2_` no banco
+
+O schema Oracle da FIAP é compartilhado e já tem tabelas de outros projetos (`MISSAO`, `CONQUISTA` etc.).
+
+- **Todo** objeto deste projeto usa o prefixo `ZYRA2_`: tabelas (`ZYRA2_MISSAO`), sequences
+  (`ZYRA2_SEQ_MISSAO`) e constraints (`ZYRA2_PK_MISSAO`, `ZYRA2_FK_CONQUISTA_MISSAO`).
+- **Nunca** rodar `DROP`, `ALTER`, `DELETE`, `UPDATE` ou `TRUNCATE` em objeto que não comece com `ZYRA2_`.
+- Ids são gerados por sequence (`ZYRA2_SEQ_<TABELA>.NEXTVAL`), nunca por `MAX(id) + 1`.
+- Scripts SQL ficam em `backend/db/`, numerados na ordem de execução (`01-schema.sql`, ...).
 
 ## Configuração do banco
 
