@@ -31,7 +31,7 @@ Cada camada só conversa com a camada imediatamente abaixo. O `resource` nunca c
 | `dao`       | Único lugar com SQL. Converte `ResultSet` em `model`.                                                     | `MissaoDAO`, `UsuarioDAO`                     |
 | `bo`        | Regras de negócio: validações, cálculo de pontos, conversão de pontos em saldo, recarga. Converte DTO ↔ model. | `MissaoBO`, `RecargaBO`                  |
 | `resource`  | Controllers REST (`@RestController`). Finos: recebem DTO, chamam o BO, devolvem DTO e o status HTTP.      | `MissaoResource`, `UsuarioResource`           |
-| `exception` | Exceções próprias e o `@RestControllerAdvice` que as traduz em respostas HTTP.                            | `RegraNegocioException`, `RecursoNaoEncontradoException`, `TratadorGlobalExceptions` |
+| `exception` | Exceções próprias e o `@RestControllerAdvice` que as traduz em respostas HTTP.                            | `RegraNegocioException`, `RecursoNaoEncontradoException`, `AcessoDadosException` (falha no banco, vira HTTP 500), `TratadorGlobalExceptions` |
 | `filter`    | Filtros que rodam antes dos resources em toda requisição (ex.: CORS para o frontend).                     | `CorsFilter`                                  |
 
 ### Regras do DAO
@@ -51,6 +51,8 @@ Identificadores em português sem acento (ver seção "Idiomas" no `CLAUDE.md` d
 - **Métodos**: camelCase com verbo: `buscarPorId`, `listarTodos`, `inserir`, `atualizar`, `excluir`,
   `converterPontosEmSaldo`.
 - **Variáveis, atributos e campos JSON**: camelCase: `idUsuario`, `nomeMissao`, `saldo`.
+  - **Exceção proposital:** o id da Missão no JSON é `id`, e não `idMissao`, porque o frontend usa
+    `missao.id`. Não "corrigir": o Contrato JSON (seção abaixo) vale mais que esta convenção.
 - **Tabelas e colunas Oracle**: UPPER_SNAKE_CASE; tabelas com prefixo `ZYRA2_` (ver seção abaixo):
   `ZYRA2_MISSAO`, `ID_MISSAO`, `NOME_MISSAO`.
 - **Endpoints**: minúsculos, no plural: `/missoes`, `/usuarios/{id}/conquistas`.
@@ -68,6 +70,13 @@ Identificadores em português sem acento (ver seção "Idiomas" no `CLAUDE.md` d
 | Id inexistente                                   | 404    | `RecursoNaoEncontradoException`, com mensagem em português com acento. |
 
 Quem traduz exceção em status é o `@RestControllerAdvice` do pacote `exception`, não o resource.
+
+## Contrato JSON (idêntico ao frontend original)
+
+Os nomes dos campos do JSON não podem mudar, porque o frontend depende deles.
+
+- Missão: `id`, `nomeMissao`, `requisito`, `conquista`
+- Conquista: `idConquista`, `pontosRecompensa`, `idMissao`
 
 ## Prefixo `ZYRA2_` no banco
 
