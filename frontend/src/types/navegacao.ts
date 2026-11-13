@@ -1,3 +1,9 @@
+// link interno com o texto que aparece na tela (ex.: links sugeridos na página de erro)
+export interface LinkNavegacao {
+  caminho: string
+  rotulo: string
+}
+
 // aviso que uma página manda para a lista de missões pelo state do react-router
 // (ex.: missão cadastrada, editada, excluída ou não encontrada)
 export interface AvisoNavegacao {
