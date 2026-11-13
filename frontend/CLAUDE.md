@@ -74,7 +74,7 @@ O Zyra reproduz o design do projeto original (`challenge-front-end-sprint-3-4/zy
 privado da Carolina). Ao recriar uma tela, copiar o JSX e as classes do componente de mesmo nome no original,
 trocando só os nomes de token da tabela abaixo. Textos da tela também iguais ao original.
 
-Telas já no design original: **Início** (`/`), **Sobre** (`/sobre`) e **Missões** (`/missoes`). As demais (cadastro, detalhe, edição, erro)
+Telas já no design original: **Início** (`/`), **Sobre** (`/sobre`), **Missões** (`/missoes`) e **Integrantes** (`/integrantes`). As demais (cadastro, detalhe, edição, erro)
 ainda usam o visual antigo dentro do `ContainerPagina` (layout de rota em `main.tsx`); ao migrar uma tela,
 tirá-la de dentro dele.
 
@@ -100,9 +100,8 @@ Tradução dos nomes do original para o Zyra:
 | `h1`–`h6` sem classe de fonte  | adicionar `font-texto`: no Zyra os títulos usam Merriweather por padrão |
 | `shadow-[... rgba(60,88,74,...)]` | `shadow-cartao`, `shadow-cartao-hover`, `shadow-calculadora`, `shadow-print` |
 | `shadow-[0_2px_8px_rgba(0,0,0,0.15)]` | `shadow-numero`                              |
-
-Ao copiar, comparar com o que **aparece** no original, não só com as classes: duas utilidades da mesma
-propriedade no mesmo elemento (ex.: duas `shadow-*`) fazem uma delas ser ignorada. Copiar só a que vence.
+| `shadow-[... rgba(60,88,74,0.12/0.22)]` | `shadow-membro` / `shadow-membro-hover`    |
+| `flex-shrink-0`                | `shrink-0` (nome do Tailwind v4, mesmo efeito)          |
 | `border-white/10`              | `border-vidro-borda`                                    |
 | `shadow-[... rgba(154,74,97,...)]` | `shadow-botao(-hover)` (0,25/0,35) ou `shadow-botao-forte(-hover)` (0,3/0,4) |
 | `text-[#e8a0b4]` / `text-[#f5b7b1]` | `text-destaque-rosa` / `text-erro-claro`           |
@@ -112,12 +111,17 @@ propriedade no mesmo elemento (ex.: duas `shadow-*`) fazem uma delas ser ignorad
 
 Se o original usar uma cor ou sombra que ainda não tem token, criar o token no `@theme` com o valor exato.
 
+Ao copiar, comparar com o que **aparece** no original, não só com as classes: duas utilidades da mesma
+propriedade no mesmo elemento (ex.: duas `shadow-*`) fazem uma delas ser ignorada. Copiar só a que vence.
+
 ### Estrutura de uma página
 
 - O `<main>` do `App` não limita largura: cada `<section>` usa
   `mx-auto w-full max-w-[1300px] px-[1.6rem] pb-[5rem] tablet:px-[3.2rem] tablet:pb-[6rem] desktop:px-[6.4rem] desktop:pb-[8rem]`.
 - Seções separadas por `Separador`; cada seção começa com `TituloSecao` (título em Lato, traço embaixo).
 - Hero da página: `h1` em Merriweather 900, `text-[2.8rem]` → `tablet:text-[3.6rem]` → `desktop:text-hero`.
+- Página com uma seção só (Integrantes; depois FAQ e Contato): sem hero nem `Separador`; começa com
+  `CabecalhoPagina` (`h1` centralizado em Merriweather 700, traço e descrição opcional).
 
 ### Componentes e cores
 
