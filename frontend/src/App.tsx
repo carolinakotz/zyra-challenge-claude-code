@@ -7,7 +7,8 @@ function App() {
   return (
     <div className="flex min-h-screen flex-col">
       <Cabecalho />
-      <main className="mx-auto w-full max-w-conteudo flex-1 px-4 py-8">
+      {/* sem largura nem padding aqui: cada página (ou o ContainerPagina) define os seus */}
+      <main className="flex-1">
         <Outlet />
       </main>
       <Rodape />
