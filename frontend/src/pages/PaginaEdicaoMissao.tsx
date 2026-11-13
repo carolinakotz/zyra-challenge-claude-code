@@ -1,14 +1,12 @@
 import { useCallback } from 'react'
-import { useParams } from 'react-router'
+import { Navigate, useParams } from 'react-router'
 import { useFetch } from '../hooks/useFetch'
 import { buscarMissao } from '../services/missaoService'
+import CabecalhoPagina from '../components/CabecalhoPagina'
 import EstadoRequisicao from '../components/EstadoRequisicao'
-import AlertaSemRepeticao from '../components/AlertaSemRepeticao'
 import FormularioMissao from '../components/FormularioMissao'
-import LinkVoltar from '../components/LinkVoltar'
 import { converterId } from '../utils/converterId'
-
-const voltarParaLista = <LinkVoltar para="/missoes">Voltar para a lista</LinkVoltar>
+import { avisoMissaoNaoEncontrada } from '../utils/avisoMissaoNaoEncontrada'
 
 // só é montado com id válido, então a API nunca é chamada com id inválido
 function EdicaoMissao({ id }: { id: number }) {
@@ -17,28 +15,32 @@ function EdicaoMissao({ id }: { id: number }) {
   const busca = useCallback((sinal: AbortSignal) => buscarMissao(id, sinal), [id])
   const { dados, carregando, erro, recarregar } = useFetch(busca)
 
-  // 404: a missão não existe, tentar de novo não resolve
+  // missão inexistente: volta para a lista com o aviso, como no projeto original
   if (erro?.status === 404) {
-    return <AlertaSemRepeticao mensagem={erro.message} acao={voltarParaLista} />
+    return <Navigate to="/missoes" replace state={avisoMissaoNaoEncontrada(String(id))} />
   }
 
+  // carregando e erro aparecem sozinhos; o título e o formulário só com a missão carregada
   return (
-    <div className="flex flex-col gap-6">
-      {voltarParaLista}
-      <h1 className="text-subtitulo font-bold tablet:text-hero">Editar missão</h1>
-      {/* uma edição nunca fica "vazia": o componente só cuida de carregando e erro */}
-      <EstadoRequisicao
-        carregando={carregando}
-        erro={erro}
-        vazio={false}
-        mensagemVazio=""
-        aoTentarNovamente={recarregar}
-        textoCarregando="Carregando missão…"
-      >
-        {/* o formulário só monta com a missão carregada, para já nascer preenchido */}
-        {dados && <FormularioMissao modo="edicao" missao={dados} />}
-      </EstadoRequisicao>
-    </div>
+    <EstadoRequisicao
+      carregando={carregando}
+      erro={erro}
+      vazio={false}
+      mensagemVazio=""
+      aoTentarNovamente={recarregar}
+      textoCarregando="Carregando missão..."
+    >
+      {dados && (
+        <section
+          aria-label="Editar missão"
+          className="mx-auto max-w-[1300px] p-[3.2rem_1.6rem_5.2rem] mobile-lg:p-[4.8rem_2.4rem_6.4rem] tablet:p-[5.6rem_4rem_7.2rem] desktop:p-[6.4rem_6.4rem_8rem]"
+        >
+          <CabecalhoPagina titulo="Editar missão:" descricao="Altere o nome ou o requisito da missão." />
+          {/* o formulário só monta com a missão carregada, para já nascer preenchido */}
+          <FormularioMissao modo="edicao" missao={dados} />
+        </section>
+      )}
+    </EstadoRequisicao>
   )
 }
 
@@ -46,8 +48,9 @@ function PaginaEdicaoMissao() {
   const { id } = useParams()
   const idNumero = converterId(id)
 
+  // endereço com id inválido (ex.: /missoes/abc/editar): trata como missão não encontrada
   if (idNumero === null) {
-    return <AlertaSemRepeticao mensagem="Endereço de missão inválido." acao={voltarParaLista} />
+    return <Navigate to="/missoes" replace state={avisoMissaoNaoEncontrada(id)} />
   }
 
   return <EdicaoMissao id={idNumero} />

@@ -1,19 +1,15 @@
 import { useCallback, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router'
+import { Navigate, useNavigate, useParams } from 'react-router'
 import { useFetch } from '../hooks/useFetch'
 import { ErroApi } from '../services/api'
 import { buscarMissao, excluirMissao } from '../services/missaoService'
+import BotaoPrimario from '../components/BotaoPrimario'
 import EstadoRequisicao from '../components/EstadoRequisicao'
-import AlertaSemRepeticao from '../components/AlertaSemRepeticao'
-import LinkVoltar from '../components/LinkVoltar'
+import MensagemRetorno from '../components/MensagemRetorno'
 import { converterId } from '../utils/converterId'
+import { avisoMissaoNaoEncontrada } from '../utils/avisoMissaoNaoEncontrada'
 import type { MissaoSaidaDTO } from '../types/missao'
-
-const CLASSES_FOCO =
-  'focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-bg'
-
-// o mesmo link aparece no topo da página e nos alertas sem repetição
-const voltarParaLista = <LinkVoltar para="/missoes">Voltar para a lista</LinkVoltar>
+import type { AvisoNavegacao } from '../types/navegacao'
 
 function ConteudoMissao({ missao }: { missao: MissaoSaidaDTO }) {
   const navigate = useNavigate()
@@ -21,11 +17,9 @@ function ConteudoMissao({ missao }: { missao: MissaoSaidaDTO }) {
   const [excluindo, setExcluindo] = useState(false)
   const [erroExclusao, setErroExclusao] = useState<string | null>(null)
 
-  const pontos = missao.conquista?.pontosRecompensa
-
   async function excluir() {
     // cancelou a confirmação: não faz nada
-    if (!window.confirm('Tem certeza que deseja excluir esta missão?')) return
+    if (!window.confirm(`Deseja realmente excluir a missão "${missao.nomeMissao}"?`)) return
 
     // limpa o erro da tentativa anterior e trava o botão contra clique duplo
     setErroExclusao(null)
@@ -35,79 +29,67 @@ function ConteudoMissao({ missao }: { missao: MissaoSaidaDTO }) {
       // DELETE responde 204 sem corpo; o api.ts devolve undefined nesse caso
       await excluirMissao(missao.id)
     } catch (e) {
-      setErroExclusao(
-        e instanceof ErroApi ? e.message : 'Ocorreu um erro inesperado ao excluir a missão.',
-      )
+      setErroExclusao(e instanceof ErroApi ? e.message : 'Não foi possível excluir a missão.')
       // só reabilita se falhar; se der certo, a página navega embora
       setExcluindo(false)
       return
     }
 
+    const aviso: AvisoNavegacao = {
+      mensagem: `Missão "${missao.nomeMissao}" excluída com sucesso!`,
+      tipo: 'sucesso',
+    }
     // replace: o detalhe da missão apagada sai do histórico, então o Voltar do navegador
     // não reabre uma missão que não existe mais
-    navigate('/missoes', {
-      replace: true,
-      state: { mensagemSucesso: 'Missão excluída com sucesso.' },
-    })
+    navigate('/missoes', { replace: true, state: aviso })
   }
 
   return (
-    <article className="flex flex-col gap-8">
-      <h1 className="text-subtitulo font-bold tablet:text-hero">{missao.nomeMissao}</h1>
+    <section
+      aria-label={`Detalhes da missão ${missao.nomeMissao}`}
+      className="mx-auto flex w-full max-w-[80rem] flex-col items-center gap-[2rem] px-[1.6rem] py-[6rem] text-center tablet:px-[3.2rem] tablet:py-[7.2rem] desktop:px-[6.4rem] desktop:py-[8.8rem]"
+    >
+      {/* volta para a página anterior do histórico, como no projeto original */}
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        className="self-start font-texto text-[1.4rem] font-semibold text-nav underline-offset-4 transition-colors duration-200 hover:text-hover hover:underline"
+      >
+        ← Voltar
+      </button>
 
-      <div className="grid gap-6 tablet:grid-cols-[2fr_1fr]">
-        <section className="flex flex-col gap-3 bg-card-light-yellow p-8 forma-folha">
-          <h2 className="text-titulo-card font-bold">Requisito</h2>
-          <p className="max-w-texto text-corpo-grande font-light text-text-dark">
-            {missao.requisito}
-          </p>
-        </section>
+      <i className="fa-solid fa-bus text-[4.8rem] text-icon" aria-hidden="true" />
 
-        {/* pontos são o destaque da página: card-dark-green é o token de saldo/pontos */}
-        {pontos !== undefined ? (
-          <section className="flex flex-col justify-center gap-1 rounded-cartao bg-card-dark-green p-8 text-text-light-yellow">
-            <p className="font-titulo text-subtitulo font-black tablet:text-hero">
-              +{pontos} pontos
-            </p>
-            <p>ao concluir esta missão</p>
-          </section>
-        ) : (
-          <section className="flex items-center rounded-cartao bg-card-light-green p-8 text-text-dark">
-            <p>Sem conquista cadastrada</p>
-          </section>
-        )}
+      <h1 className="font-titulo text-[2.6rem] leading-[1.2] font-black text-title tablet:text-subtitulo">
+        {missao.nomeMissao}
+      </h1>
+
+      <p className="mx-auto max-w-[60rem] font-texto text-[1.5rem] leading-[1.7] text-text-dark tablet:text-corpo-grande">
+        {missao.requisito}
+      </p>
+
+      {/* missão sem conquista não mostra pontos */}
+      {missao.conquista && (
+        <p className="font-texto text-[1.8rem] font-bold text-hover">
+          +{missao.conquista.pontosRecompensa} pts ao completar essa missão
+        </p>
+      )}
+
+      {erroExclusao && <MensagemRetorno tipo="erro" texto={erroExclusao} />}
+
+      <div className="flex flex-col items-center gap-[1.6rem] mobile-lg:flex-row">
+        <BotaoPrimario to="/missoes">Ver todas as missões</BotaoPrimario>
+        <BotaoPrimario to={`/missoes/${missao.id}/editar`}>Editar</BotaoPrimario>
+        <button
+          type="button"
+          onClick={excluir}
+          disabled={excluindo}
+          className="rounded-lg border-[1.5px] border-erro px-[3.6rem] py-[1.3rem] text-[1.6rem] font-semibold text-erro transition-[background-color,color] duration-300 hover:bg-erro hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
+        >
+          {excluindo ? 'Excluindo...' : 'Excluir'}
+        </button>
       </div>
-
-      <div className="flex flex-col gap-4">
-        {/* erro da exclusão fica junto dos botões; a missão continua visível acima */}
-        {erroExclusao && (
-          <p
-            role="alert"
-            className="flex items-start gap-3 rounded-cartao border border-erro-borda bg-erro-fundo p-4 text-erro-texto"
-          >
-            <i className="fa-solid fa-circle-exclamation mt-1" aria-hidden="true" />
-            <span>{erroExclusao}</span>
-          </p>
-        )}
-
-        <div className="flex flex-wrap gap-4">
-          <Link
-            to={`/missoes/${missao.id}/editar`}
-            className={`rounded-full bg-button-pink px-6 py-3 font-bold text-text-light-yellow transition-colors duration-150 hover:bg-brand motion-reduce:transition-none ${CLASSES_FOCO}`}
-          >
-            Editar
-          </Link>
-          <button
-            type="button"
-            onClick={excluir}
-            disabled={excluindo}
-            className={`rounded-full border-2 border-erro px-6 py-3 font-bold text-erro-texto transition-colors duration-150 enabled:hover:bg-erro-fundo disabled:cursor-not-allowed disabled:border-card-gray disabled:bg-card-gray disabled:text-separator-dark motion-reduce:transition-none ${CLASSES_FOCO}`}
-          >
-            {excluindo ? 'Excluindo…' : 'Excluir'}
-          </button>
-        </div>
-      </div>
-    </article>
+    </section>
   )
 }
 
@@ -118,26 +100,23 @@ function DetalheMissao({ id }: { id: number }) {
   const busca = useCallback((sinal: AbortSignal) => buscarMissao(id, sinal), [id])
   const { dados, carregando, erro, recarregar } = useFetch(busca)
 
-  // 404: a missão não existe, tentar de novo não resolve
+  // missão inexistente: volta para a lista com o aviso, como no projeto original
   if (erro?.status === 404) {
-    return <AlertaSemRepeticao mensagem={erro.message} acao={voltarParaLista} />
+    return <Navigate to="/missoes" replace state={avisoMissaoNaoEncontrada(String(id))} />
   }
 
+  // carregando e erro aparecem sozinhos; o conteúdo só com a missão carregada
   return (
-    <div className="flex flex-col gap-6">
-      {voltarParaLista}
-      {/* um detalhe nunca fica "vazio": o componente só cuida de carregando e erro */}
-      <EstadoRequisicao
-        carregando={carregando}
-        erro={erro}
-        vazio={false}
-        mensagemVazio=""
-        aoTentarNovamente={recarregar}
-        textoCarregando="Carregando missão…"
-      >
-        {dados && <ConteudoMissao missao={dados} />}
-      </EstadoRequisicao>
-    </div>
+    <EstadoRequisicao
+      carregando={carregando}
+      erro={erro}
+      vazio={false}
+      mensagemVazio=""
+      aoTentarNovamente={recarregar}
+      textoCarregando="Carregando missão..."
+    >
+      {dados && <ConteudoMissao missao={dados} />}
+    </EstadoRequisicao>
   )
 }
 
@@ -145,8 +124,9 @@ function PaginaDetalheMissao() {
   const { id } = useParams()
   const idNumero = converterId(id)
 
+  // endereço com id inválido (ex.: /missoes/abc): trata como missão não encontrada
   if (idNumero === null) {
-    return <AlertaSemRepeticao mensagem="Endereço de missão inválido." acao={voltarParaLista} />
+    return <Navigate to="/missoes" replace state={avisoMissaoNaoEncontrada(id)} />
   }
 
   // ao ir de /missoes/1 para /missoes/2 o componente é reaproveitado:
