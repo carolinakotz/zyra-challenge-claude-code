@@ -8,6 +8,7 @@ import PaginaInicio from './pages/PaginaInicio'
 import PaginaSobre from './pages/PaginaSobre'
 import PaginaMissoes from './pages/PaginaMissoes'
 import PaginaIntegrantes from './pages/PaginaIntegrantes'
+import PaginaFaq from './pages/PaginaFaq'
 import PaginaCadastroMissao from './pages/PaginaCadastroMissao'
 import PaginaDetalheMissao from './pages/PaginaDetalheMissao'
 import PaginaEdicaoMissao from './pages/PaginaEdicaoMissao'
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
       { path: 'sobre', element: <PaginaSobre /> },
       { path: 'missoes', element: <PaginaMissoes /> },
       { path: 'integrantes', element: <PaginaIntegrantes /> },
+      { path: 'faq', element: <PaginaFaq /> },
       // rota sem path: só envolve as páginas filhas no container centralizado
       {
         element: <ContainerPagina />,

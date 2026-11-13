@@ -19,7 +19,8 @@ function Cabecalho() {
         </Link>
 
         <nav aria-label="Navegação principal">
-          <ul className="flex gap-2">
+          {/* flex-wrap: no celular os links quebram linha em vez de passar da largura da tela */}
+          <ul className="flex flex-wrap gap-2">
             <li>
               {/* end: só fica ativo exatamente em "/", não em toda rota que começa com "/" */}
               <NavLink to="/" end className={classesItem}>
@@ -40,6 +41,11 @@ function Cabecalho() {
             <li>
               <NavLink to="/integrantes" className={classesItem}>
                 Integrantes
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/faq" className={classesItem}>
+                FAQ
               </NavLink>
             </li>
           </ul>

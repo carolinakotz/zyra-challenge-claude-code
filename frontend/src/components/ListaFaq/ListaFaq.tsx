@@ -1,0 +1,24 @@
+import { useState } from 'react'
+import { perguntasFrequentes } from '../../data/faq'
+import ItemFaq from '../ItemFaq'
+
+// acordeão de perguntas frequentes: só uma resposta fica aberta por vez
+function ListaFaq() {
+  // id da pergunta aberta; null quando todas estão fechadas
+  const [idAberto, setIdAberto] = useState<number | null>(null)
+
+  // clicar na pergunta aberta fecha; clicar em outra troca a aberta
+  function alternarItem(id: number) {
+    setIdAberto((atual) => (atual === id ? null : id))
+  }
+
+  return (
+    <div className="mx-auto flex w-full max-w-[72rem] flex-col gap-[1.2rem] mobile-lg:gap-[1.4rem] tablet:gap-[1.6rem]">
+      {perguntasFrequentes.map((item) => (
+        <ItemFaq key={item.id} item={item} aberto={item.id === idAberto} aoAlternar={alternarItem} />
+      ))}
+    </div>
+  )
+}
+
+export default ListaFaq

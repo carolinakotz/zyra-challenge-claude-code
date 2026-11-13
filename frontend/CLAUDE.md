@@ -74,7 +74,7 @@ O Zyra reproduz o design do projeto original (`challenge-front-end-sprint-3-4/zy
 privado da Carolina). Ao recriar uma tela, copiar o JSX e as classes do componente de mesmo nome no original,
 trocando só os nomes de token da tabela abaixo. Textos da tela também iguais ao original.
 
-Telas já no design original: **Início** (`/`), **Sobre** (`/sobre`), **Missões** (`/missoes`) e **Integrantes** (`/integrantes`). As demais (cadastro, detalhe, edição, erro)
+Telas já no design original: **Início** (`/`), **Sobre** (`/sobre`), **Missões** (`/missoes`), **Integrantes** (`/integrantes`) e **FAQ** (`/faq`). As demais (cadastro, detalhe, edição, erro)
 ainda usam o visual antigo dentro do `ContainerPagina` (layout de rota em `main.tsx`); ao migrar uma tela,
 tirá-la de dentro dele.
 
@@ -120,7 +120,7 @@ propriedade no mesmo elemento (ex.: duas `shadow-*`) fazem uma delas ser ignorad
   `mx-auto w-full max-w-[1300px] px-[1.6rem] pb-[5rem] tablet:px-[3.2rem] tablet:pb-[6rem] desktop:px-[6.4rem] desktop:pb-[8rem]`.
 - Seções separadas por `Separador`; cada seção começa com `TituloSecao` (título em Lato, traço embaixo).
 - Hero da página: `h1` em Merriweather 900, `text-[2.8rem]` → `tablet:text-[3.6rem]` → `desktop:text-hero`.
-- Página com uma seção só (Integrantes; depois FAQ e Contato): sem hero nem `Separador`; começa com
+- Página com uma seção só (Integrantes e FAQ; depois Contato): sem hero nem `Separador`; começa com
   `CabecalhoPagina` (`h1` centralizado em Merriweather 700, traço e descrição opcional).
 
 ### Componentes e cores
