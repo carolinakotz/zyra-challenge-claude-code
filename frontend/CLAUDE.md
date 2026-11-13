@@ -74,7 +74,8 @@ O Zyra reproduz o design do projeto original (`challenge-front-end-sprint-3-4/zy
 privado da Carolina). Ao recriar uma tela, copiar o JSX e as classes do componente de mesmo nome no original,
 trocando só os nomes de token da tabela abaixo. Textos da tela também iguais ao original.
 
-Telas já no design original: **Início** (`/`), **Sobre** (`/sobre`), **Missões** (`/missoes`), **Integrantes** (`/integrantes`) e **FAQ** (`/faq`). As demais (cadastro, detalhe, edição, erro)
+Telas já no design original: **Início** (`/`), **Sobre** (`/sobre`), **Missões** (`/missoes`), **Integrantes** (`/integrantes`), **FAQ** (`/faq`) e **Contato** (`/contato`), ou seja, todas as páginas do
+original (faltam cabeçalho e rodapé). As demais telas do Zyra (cadastro, detalhe, edição, erro)
 ainda usam o visual antigo dentro do `ContainerPagina` (layout de rota em `main.tsx`); ao migrar uma tela,
 tirá-la de dentro dele.
 
@@ -108,6 +109,9 @@ Tradução dos nomes do original para o Zyra:
 | `bg-[rgba(255,255,255,0.0x)]`  | `bg-vidro-campo`, `bg-vidro-cartao`, `bg-vidro-resumo`, `border-vidro-borda` |
 | `bg-[rgba(154,74,97,...)]`     | `bg-rosa-translucido`, `border-rosa-translucido-borda`  |
 | alertas `#d4edda`, `#f8d7da`...| `sucesso-fundo/borda/texto`, `erro-fundo/borda/texto`   |
+| `#c0392b` (borda e texto de erro de campo) | `border-erro` / `text-erro`                 |
+| `shadow-[0_0_0_3px_rgba(60,88,74,0.12)]` / `...rgba(192,57,43,0.12)` | `shadow-foco-campo` / `shadow-erro-campo` |
+| `shadow-[... rgba(60,88,74,0.18/0.28)]` (botão verde) | `shadow-botao-verde` / `shadow-botao-verde-hover` |
 
 Se o original usar uma cor ou sombra que ainda não tem token, criar o token no `@theme` com o valor exato.
 
@@ -120,7 +124,7 @@ propriedade no mesmo elemento (ex.: duas `shadow-*`) fazem uma delas ser ignorad
   `mx-auto w-full max-w-[1300px] px-[1.6rem] pb-[5rem] tablet:px-[3.2rem] tablet:pb-[6rem] desktop:px-[6.4rem] desktop:pb-[8rem]`.
 - Seções separadas por `Separador`; cada seção começa com `TituloSecao` (título em Lato, traço embaixo).
 - Hero da página: `h1` em Merriweather 900, `text-[2.8rem]` → `tablet:text-[3.6rem]` → `desktop:text-hero`.
-- Página com uma seção só (Integrantes e FAQ; depois Contato): sem hero nem `Separador`; começa com
+- Página com uma seção só (Integrantes, FAQ e Contato): sem hero nem `Separador`; começa com
   `CabecalhoPagina` (`h1` centralizado em Merriweather 700, traço e descrição opcional).
 
 ### Componentes e cores
@@ -137,6 +141,8 @@ propriedade no mesmo elemento (ex.: duas `shadow-*`) fazem uma delas ser ignorad
 ### Acessibilidade (manter ao copiar)
 
 - `brand` nunca sobre `nav`, `footer` ou `card-dark-green` (contraste ~1,6:1).
+- Exceção consciente: o texto de erro dos campos de formulário (`CampoTexto`, `CampoTextarea`) usa `text-erro`
+  sobre `bg` (4,3:1, abaixo do 4,5:1 recomendado) por fidelidade ao original. Decisão da Carolina.
 - Ícone decorativo com `aria-hidden="true"`; botão só com ícone com `aria-label` em pt-BR com acento.
 - Card clicável que é um `Link` inteiro: adicionar `focus-visible:ring-3 focus-visible:ring-brand
   focus-visible:ring-offset-2 focus-visible:ring-offset-bg`.

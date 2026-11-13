@@ -48,6 +48,11 @@ function Cabecalho() {
                 FAQ
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/contato" className={classesItem}>
+                Contato
+              </NavLink>
+            </li>
           </ul>
         </nav>
       </div>

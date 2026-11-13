@@ -65,6 +65,12 @@
   --shadow-membro-hover: 0 8px 28px rgba(60, 88, 74, 0.22);
   /* círculo com o número do passo (página Sobre) */
   --shadow-numero: 0 2px 8px rgba(0, 0, 0, 0.15);
+  /* campos do formulário de contato: anel verde no foco, anel vermelho com erro */
+  --shadow-foco-campo: 0 0 0 3px rgba(60, 88, 74, 0.12);
+  --shadow-erro-campo: 0 0 0 3px rgba(192, 57, 43, 0.12);
+  /* botão verde "Enviar" do contato */
+  --shadow-botao-verde: 0 2px 8px rgba(60, 88, 74, 0.18);
+  --shadow-botao-verde-hover: 0 6px 20px rgba(60, 88, 74, 0.28);
   --shadow-botao: 0 2px 8px rgba(154, 74, 97, 0.25);
   --shadow-botao-hover: 0 6px 20px rgba(154, 74, 97, 0.35);
   --shadow-botao-forte: 0 2px 8px rgba(154, 74, 97, 0.3);
