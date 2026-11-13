@@ -103,10 +103,8 @@
   /* formas */
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
-  --radius-ponta: 0.4rem;
   --radius-controle: 0.8rem;
   --radius-cartao: 1.6rem;
-  --radius-folha: 2.4rem;
 
   /* larguras máximas */
   --container-conteudo: 120rem;
@@ -135,11 +133,6 @@
     font-family: var(--font-titulo);
     color: var(--color-title);
   }
-}
-
-/* card de missão: cantos grandes em diagonal, como uma folha */
-@utility forma-folha {
-  border-radius: var(--radius-folha) var(--radius-ponta);
 }
 
 /* cards de missão e conquista (design original): canto grande em cima à esquerda e embaixo à direita */

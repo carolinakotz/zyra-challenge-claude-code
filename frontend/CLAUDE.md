@@ -64,7 +64,7 @@ Ver seção "Idiomas" no `CLAUDE.md` da raiz.
 - Tipos com os mesmos nomes dos DTOs do backend (`MissaoSaidaDTO`, `MissaoEntradaDTO`).
 - Tokens de design: os de cor herdados da identidade original ficam em inglês (`bg`, `brand`,
   `card-gray`, `text-dark`...); os de feedback e os criados no Zyra ficam em português (`erro-texto`,
-  `titulo-card`, `forma-folha`). Ver seção "Design".
+  `titulo-card`, `shadow-cartao`). Ver seção "Design".
 - Comentários em português simples.
 - TypeScript estrito; evitar `any`. Apenas componentes funcionais com hooks.
 
@@ -74,10 +74,8 @@ O Zyra reproduz o design do projeto original (`challenge-front-end-sprint-3-4/zy
 privado da Carolina). Ao recriar uma tela, copiar o JSX e as classes do componente de mesmo nome no original,
 trocando só os nomes de token da tabela abaixo. Textos da tela também iguais ao original.
 
-Telas já no design original: **Início** (`/`), **Sobre** (`/sobre`), **Missões** (`/missoes`), **Integrantes** (`/integrantes`), **FAQ** (`/faq`) e **Contato** (`/contato`), ou seja, todas as páginas do
-original (faltam cabeçalho e rodapé). As demais telas do Zyra (cadastro, detalhe, edição, erro)
-ainda usam o visual antigo dentro do `ContainerPagina` (layout de rota em `main.tsx`); ao migrar uma tela,
-tirá-la de dentro dele.
+Todas as telas já estão no design original: Início, Sobre, Missões (lista, cadastro, detalhe e edição),
+Integrantes, FAQ, Contato e a página de erro. Faltam só o cabeçalho e o rodapé.
 
 ### Tokens (definidos no `@theme` de `src/index.css`)
 
@@ -124,7 +122,7 @@ propriedade no mesmo elemento (ex.: duas `shadow-*`) fazem uma delas ser ignorad
   `mx-auto w-full max-w-[1300px] px-[1.6rem] pb-[5rem] tablet:px-[3.2rem] tablet:pb-[6rem] desktop:px-[6.4rem] desktop:pb-[8rem]`.
 - Seções separadas por `Separador`; cada seção começa com `TituloSecao` (título em Lato, traço embaixo).
 - Hero da página: `h1` em Merriweather 900, `text-[2.8rem]` → `tablet:text-[3.6rem]` → `desktop:text-hero`.
-- Página com uma seção só (Integrantes, FAQ e Contato): sem hero nem `Separador`; começa com
+- Página com uma seção só (Integrantes, FAQ, Contato, cadastro e edição de missão): sem hero nem `Separador`; começa com
   `CabecalhoPagina` (`h1` centralizado em Merriweather 700, traço e descrição opcional).
 
 ### Componentes e cores
@@ -135,8 +133,13 @@ propriedade no mesmo elemento (ex.: duas `shadow-*`) fazem uma delas ser ignorad
 - Botão primário (`BotaoPrimario`): `rounded-lg bg-button-pink text-white shadow-botao`, `hover:scale-[1.06]`.
   Botões menores (calcular, tentar novamente): `rounded-controle`, `shadow-botao-forte`, `hover:scale-105`.
 - Avisos depois de uma ação: `MensagemRetorno` (centralizado, cores `sucesso-*` / `erro-*`).
+  Para mostrar um aviso na lista de missões depois de navegar, mandar um `AvisoNavegacao`
+  (`{ mensagem, tipo }`, em `types/navegacao.ts`) no `state` do `navigate`/`<Navigate>`.
+- Missão não encontrada (404) ou id inválido no endereço: voltar para `/missoes` com
+  `avisoMissaoNaoEncontrada(id)` (`utils/`), como no original. Não mostrar o erro na própria página.
 - Carregando, erro e vazio: `EstadoRequisicao` (ícone centralizado + texto + "Tentar novamente").
-- `forma-folha` é do visual antigo (ainda usado no detalhe da missão); não usar em telas novas.
+- Formulários: `CampoTexto` / `CampoTextarea` com `react-hook-form`, linha `separator-light` e botão verde
+  de largura total (`bg-card-green`, `shadow-botao-verde`). Limites de tamanho iguais aos DTOs do backend.
 
 ### Acessibilidade (manter ao copiar)
 
