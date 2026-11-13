@@ -47,10 +47,11 @@ async function requisitar<T>(caminho: string, opcoes: RequestInit = {}): Promise
   try {
     resposta = await fetch(`${API_URL}${caminho}`, {
       ...opcoes,
-      headers: {
-        'Content-Type': 'application/json',
-        ...opcoes.headers,
-      },
+      // Content-Type só quando há corpo (POST/PUT); num GET ele forçaria um preflight de CORS
+      headers:
+        opcoes.body !== undefined
+          ? { 'Content-Type': 'application/json', ...opcoes.headers }
+          : opcoes.headers,
     })
   } catch (erro) {
     // cancelamento pedido por quem chamou (AbortController): repassa o erro original,
