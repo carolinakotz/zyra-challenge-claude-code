@@ -27,6 +27,11 @@ function Cabecalho() {
               </NavLink>
             </li>
             <li>
+              <NavLink to="/sobre" className={classesItem}>
+                Sobre
+              </NavLink>
+            </li>
+            <li>
               {/* sem end: continua ativo em /missoes/nova, /missoes/7 etc. */}
               <NavLink to="/missoes" className={classesItem}>
                 Missões
