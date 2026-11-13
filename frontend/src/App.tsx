@@ -1,8 +1,17 @@
+import { Outlet } from 'react-router'
+import Cabecalho from './components/Cabecalho'
+import Rodape from './components/Rodape'
+
+// layout comum a todas as páginas: o Outlet é trocado pela página da rota atual
 function App() {
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
-      <h1 className="text-subtitulo font-black text-brand tablet:text-hero">Zyra</h1>
-    </main>
+    <div className="flex min-h-screen flex-col">
+      <Cabecalho />
+      <main className="mx-auto w-full max-w-conteudo flex-1 px-4 py-8">
+        <Outlet />
+      </main>
+      <Rodape />
+    </div>
   )
 }
 
