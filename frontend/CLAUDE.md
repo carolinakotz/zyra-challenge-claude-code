@@ -34,6 +34,22 @@ src/
 - Estilos somente com classes do Tailwind; evitar CSS avulso. O único CSS escrito à mão fica em
   `src/index.css` (`@theme`, `@layer base` e `@utility`); componentes não têm arquivos `.css`.
 
+## Deploy e variáveis de ambiente
+
+O frontend é publicado na **Vercel** (raiz em `frontend/`). O `vercel.json` reescreve todas as rotas
+para `/index.html`, para o React Router (`createBrowserRouter`) abrir rotas como `/missoes/3` mesmo
+com F5 ou link direto.
+
+| Variável       | Onde                                                    | Uso                    |
+|----------------|---------------------------------------------------------|------------------------|
+| `VITE_API_URL` | `.env` local; painel da Vercel em produção (URL do Render) | Endereço base da API. |
+
+- **Não guarda segredo, e nunca deve guardar**: o Vite grava o valor no JavaScript do build, então
+  qualquer pessoa consegue lê-lo no navegador. Mudar o valor exige um novo deploy.
+- Em produção, usar `https` e **sem barra no final**: `https://zyra-api.onrender.com`.
+- O backend libera pelo `CORS_ORIGENS` **só o domínio de produção** da Vercel. Os endereços de
+  preview mudam a cada deploy e ficam bloqueados pelo CORS (ver `backend/CLAUDE.md`).
+
 ## Idiomas e nomes
 
 Ver seção "Idiomas" no `CLAUDE.md` da raiz.
