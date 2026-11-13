@@ -56,6 +56,8 @@ Observações:
 - Sem acento e sem `ç` em identificador: `Missao`, `Conquista`, `acao`, `descricao`.
 - Termos técnicos que fazem parte das convenções da stack ficam como estão: sufixos `DAO`, `BO`,
   `Resource`, `DTO`, a pasta `services/` do frontend, prefixo `use` de hooks, anotações do Spring.
+- Exceção: os tokens de design do frontend herdados da identidade visual original ficam em inglês
+  (`bg`, `brand`, `nav`, `card-gray`, `text-dark`...). Ver seção "Design" em `frontend/CLAUDE.md`.
 
 ## Convenções gerais
 
