@@ -5,6 +5,7 @@ import './index.css'
 import App from './App.tsx'
 import ContainerPagina from './components/ContainerPagina'
 import PaginaInicio from './pages/PaginaInicio'
+import PaginaSobre from './pages/PaginaSobre'
 import PaginaMissoes from './pages/PaginaMissoes'
 import PaginaCadastroMissao from './pages/PaginaCadastroMissao'
 import PaginaDetalheMissao from './pages/PaginaDetalheMissao'
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
     children: [
       // já no design original: cada seção controla a própria largura
       { index: true, element: <PaginaInicio /> },
+      { path: 'sobre', element: <PaginaSobre /> },
       { path: 'missoes', element: <PaginaMissoes /> },
       // rota sem path: só envolve as páginas filhas no container centralizado
       {

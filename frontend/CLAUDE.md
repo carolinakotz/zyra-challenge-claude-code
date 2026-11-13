@@ -74,7 +74,7 @@ O Zyra reproduz o design do projeto original (`challenge-front-end-sprint-3-4/zy
 privado da Carolina). Ao recriar uma tela, copiar o JSX e as classes do componente de mesmo nome no original,
 trocando só os nomes de token da tabela abaixo. Textos da tela também iguais ao original.
 
-Telas já no design original: **Início** (`/`) e **Missões** (`/missoes`). As demais (cadastro, detalhe, edição, erro)
+Telas já no design original: **Início** (`/`), **Sobre** (`/sobre`) e **Missões** (`/missoes`). As demais (cadastro, detalhe, edição, erro)
 ainda usam o visual antigo dentro do `ContainerPagina` (layout de rota em `main.tsx`); ao migrar uma tela,
 tirá-la de dentro dele.
 
@@ -99,6 +99,11 @@ Tradução dos nomes do original para o Zyra:
 | `rounded-lg` / `rounded-xl`    | `rounded-lg` / `rounded-xl` (tokens com os valores padrão do Tailwind) |
 | `h1`–`h6` sem classe de fonte  | adicionar `font-texto`: no Zyra os títulos usam Merriweather por padrão |
 | `shadow-[... rgba(60,88,74,...)]` | `shadow-cartao`, `shadow-cartao-hover`, `shadow-calculadora`, `shadow-print` |
+| `shadow-[0_2px_8px_rgba(0,0,0,0.15)]` | `shadow-numero`                              |
+
+Ao copiar, comparar com o que **aparece** no original, não só com as classes: duas utilidades da mesma
+propriedade no mesmo elemento (ex.: duas `shadow-*`) fazem uma delas ser ignorada. Copiar só a que vence.
+| `border-white/10`              | `border-vidro-borda`                                    |
 | `shadow-[... rgba(154,74,97,...)]` | `shadow-botao(-hover)` (0,25/0,35) ou `shadow-botao-forte(-hover)` (0,3/0,4) |
 | `text-[#e8a0b4]` / `text-[#f5b7b1]` | `text-destaque-rosa` / `text-erro-claro`           |
 | `bg-[rgba(255,255,255,0.0x)]`  | `bg-vidro-campo`, `bg-vidro-cartao`, `bg-vidro-resumo`, `border-vidro-borda` |
