@@ -1,7 +1,8 @@
-import { useCallback } from 'react'
-import { Link, useParams } from 'react-router'
+import { useCallback, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router'
 import { useFetch } from '../hooks/useFetch'
-import { buscarMissao } from '../services/missaoService'
+import { ErroApi } from '../services/api'
+import { buscarMissao, excluirMissao } from '../services/missaoService'
 import EstadoRequisicao from '../components/EstadoRequisicao'
 import AlertaSemRepeticao from '../components/AlertaSemRepeticao'
 import LinkVoltar from '../components/LinkVoltar'
@@ -15,7 +16,40 @@ const CLASSES_FOCO =
 const voltarParaLista = <LinkVoltar para="/missoes">Voltar para a lista</LinkVoltar>
 
 function ConteudoMissao({ missao }: { missao: MissaoSaidaDTO }) {
+  const navigate = useNavigate()
+  // estado próprio da exclusão: separado do erro do useFetch, que é o erro da busca
+  const [excluindo, setExcluindo] = useState(false)
+  const [erroExclusao, setErroExclusao] = useState<string | null>(null)
+
   const pontos = missao.conquista?.pontosRecompensa
+
+  async function excluir() {
+    // cancelou a confirmação: não faz nada
+    if (!window.confirm('Tem certeza que deseja excluir esta missão?')) return
+
+    // limpa o erro da tentativa anterior e trava o botão contra clique duplo
+    setErroExclusao(null)
+    setExcluindo(true)
+
+    try {
+      // DELETE responde 204 sem corpo; o api.ts devolve undefined nesse caso
+      await excluirMissao(missao.id)
+    } catch (e) {
+      setErroExclusao(
+        e instanceof ErroApi ? e.message : 'Ocorreu um erro inesperado ao excluir a missão.',
+      )
+      // só reabilita se falhar; se der certo, a página navega embora
+      setExcluindo(false)
+      return
+    }
+
+    // replace: o detalhe da missão apagada sai do histórico, então o Voltar do navegador
+    // não reabre uma missão que não existe mais
+    navigate('/missoes', {
+      replace: true,
+      state: { mensagemSucesso: 'Missão excluída com sucesso.' },
+    })
+  }
 
   return (
     <article className="flex flex-col gap-8">
@@ -44,20 +78,34 @@ function ConteudoMissao({ missao }: { missao: MissaoSaidaDTO }) {
         )}
       </div>
 
-      <div className="flex flex-wrap gap-4">
-        <Link
-          to={`/missoes/${missao.id}/editar`}
-          className={`rounded-full bg-button-pink px-6 py-3 font-bold text-text-light-yellow transition-colors duration-150 hover:bg-brand motion-reduce:transition-none ${CLASSES_FOCO}`}
-        >
-          Editar
-        </Link>
-        {/* exclusão ainda não implementada: o clique não faz nada por enquanto */}
-        <button
-          type="button"
-          className={`rounded-full border-2 border-erro px-6 py-3 font-bold text-erro-texto transition-colors duration-150 hover:bg-erro-fundo motion-reduce:transition-none ${CLASSES_FOCO}`}
-        >
-          Excluir
-        </button>
+      <div className="flex flex-col gap-4">
+        {/* erro da exclusão fica junto dos botões; a missão continua visível acima */}
+        {erroExclusao && (
+          <p
+            role="alert"
+            className="flex items-start gap-3 rounded-cartao border border-erro-borda bg-erro-fundo p-4 text-erro-texto"
+          >
+            <i className="fa-solid fa-circle-exclamation mt-1" aria-hidden="true" />
+            <span>{erroExclusao}</span>
+          </p>
+        )}
+
+        <div className="flex flex-wrap gap-4">
+          <Link
+            to={`/missoes/${missao.id}/editar`}
+            className={`rounded-full bg-button-pink px-6 py-3 font-bold text-text-light-yellow transition-colors duration-150 hover:bg-brand motion-reduce:transition-none ${CLASSES_FOCO}`}
+          >
+            Editar
+          </Link>
+          <button
+            type="button"
+            onClick={excluir}
+            disabled={excluindo}
+            className={`rounded-full border-2 border-erro px-6 py-3 font-bold text-erro-texto transition-colors duration-150 enabled:hover:bg-erro-fundo disabled:cursor-not-allowed disabled:border-card-gray disabled:bg-card-gray disabled:text-separator-dark motion-reduce:transition-none ${CLASSES_FOCO}`}
+          >
+            {excluindo ? 'Excluindo…' : 'Excluir'}
+          </button>
+        </div>
       </div>
     </article>
   )
