@@ -44,6 +44,26 @@
   --color-sucesso-fundo: #D4EDDA;
   --color-sucesso-texto: #155724;
   --color-destaque-rosa: #E8A0B4;
+  --color-white: #FFFFFF;
+
+  /* calculadora de impacto (fundo card-dark-green): erro claro e camadas translúcidas */
+  --color-erro-claro: #F5B7B1;
+  --color-vidro-campo: rgba(255, 255, 255, 0.08);
+  --color-vidro-cartao: rgba(255, 255, 255, 0.07);
+  --color-vidro-resumo: rgba(255, 255, 255, 0.06);
+  --color-vidro-borda: rgba(255, 255, 255, 0.1);
+  --color-rosa-translucido: rgba(154, 74, 97, 0.2);
+  --color-rosa-translucido-borda: rgba(154, 74, 97, 0.35);
+
+  /* sombras (verde nos cards, rosa nos botões) */
+  --shadow-cartao: 0 2px 12px rgba(60, 88, 74, 0.1);
+  --shadow-cartao-hover: 0 8px 28px rgba(60, 88, 74, 0.2);
+  --shadow-calculadora: 0 4px 24px rgba(60, 88, 74, 0.18);
+  --shadow-print: 0 8px 32px rgba(60, 88, 74, 0.2);
+  --shadow-botao: 0 2px 8px rgba(154, 74, 97, 0.25);
+  --shadow-botao-hover: 0 6px 20px rgba(154, 74, 97, 0.35);
+  --shadow-botao-forte: 0 2px 8px rgba(154, 74, 97, 0.3);
+  --shadow-botao-forte-hover: 0 6px 20px rgba(154, 74, 97, 0.4);
 
   /* fontes */
   --font-titulo: "Merriweather", Georgia, serif;
@@ -70,6 +90,7 @@
   --breakpoint-desktop: 992px;
 
   /* formas */
+  --radius-lg: 0.5rem;
   --radius-ponta: 0.4rem;
   --radius-controle: 0.8rem;
   --radius-cartao: 1.6rem;
@@ -107,4 +128,14 @@
 /* card de missão: cantos grandes em diagonal, como uma folha */
 @utility forma-folha {
   border-radius: var(--radius-folha) var(--radius-ponta);
+}
+
+/* cards de missão e conquista (design original): canto grande em cima à esquerda e embaixo à direita */
+@utility card-shape {
+  border-radius: 6rem 1rem 6rem 1rem;
+}
+
+/* versão invertida, usada no card da calculadora */
+@utility card-shape-alt {
+  border-radius: 1rem 6rem 1rem 6rem;
 }
