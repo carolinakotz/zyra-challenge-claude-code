@@ -20,12 +20,12 @@ const router = createBrowserRouter([
     errorElement: <PaginaErro />,
     children: [
       // já no design original: cada seção controla a própria largura
+      { index: true, element: <PaginaInicio /> },
       { path: 'missoes', element: <PaginaMissoes /> },
       // rota sem path: só envolve as páginas filhas no container centralizado
       {
         element: <ContainerPagina />,
         children: [
-          { index: true, element: <PaginaInicio /> },
           // "nova" é texto fixo, então tem prioridade sobre ":id"
           { path: 'missoes/nova', element: <PaginaCadastroMissao /> },
           { path: 'missoes/:id', element: <PaginaDetalheMissao /> },

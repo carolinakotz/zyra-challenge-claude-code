@@ -74,7 +74,7 @@ O Zyra reproduz o design do projeto original (`challenge-front-end-sprint-3-4/zy
 privado da Carolina). Ao recriar uma tela, copiar o JSX e as classes do componente de mesmo nome no original,
 trocando só os nomes de token da tabela abaixo. Textos da tela também iguais ao original.
 
-Telas já no design original: **Missões** (`/missoes`). As demais (Início, cadastro, detalhe, edição, erro)
+Telas já no design original: **Início** (`/`) e **Missões** (`/missoes`). As demais (cadastro, detalhe, edição, erro)
 ainda usam o visual antigo dentro do `ContainerPagina` (layout de rota em `main.tsx`); ao migrar uma tela,
 tirá-la de dentro dele.
 
@@ -96,6 +96,8 @@ Tradução dos nomes do original para o Zyra:
 | `text-body`                    | `text-corpo-grande`                                     |
 | `text-hero`                    | `text-hero`                                             |
 | `rounded-[0.8rem]`             | `rounded-controle`                                      |
+| `rounded-lg` / `rounded-xl`    | `rounded-lg` / `rounded-xl` (tokens com os valores padrão do Tailwind) |
+| `h1`–`h6` sem classe de fonte  | adicionar `font-texto`: no Zyra os títulos usam Merriweather por padrão |
 | `shadow-[... rgba(60,88,74,...)]` | `shadow-cartao`, `shadow-cartao-hover`, `shadow-calculadora`, `shadow-print` |
 | `shadow-[... rgba(154,74,97,...)]` | `shadow-botao(-hover)` (0,25/0,35) ou `shadow-botao-forte(-hover)` (0,3/0,4) |
 | `text-[#e8a0b4]` / `text-[#f5b7b1]` | `text-destaque-rosa` / `text-erro-claro`           |

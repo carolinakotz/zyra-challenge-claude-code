@@ -1,5 +1,16 @@
+import HeroInicio from '../components/HeroInicio'
+import SecaoDestaques from '../components/SecaoDestaques'
+import Separador from '../components/Separador'
+
+// cada seção controla a própria largura e os próprios espaçamentos, como no projeto original
 function PaginaInicio() {
-  return <h1 className="text-subtitulo font-bold tablet:text-hero">Início</h1>
+  return (
+    <>
+      <HeroInicio />
+      <Separador />
+      <SecaoDestaques />
+    </>
+  )
 }
 
 export default PaginaInicio
