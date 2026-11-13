@@ -4,26 +4,44 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-// libera o frontend (Vite em http://localhost:5173) para chamar esta API pelo navegador
+// libera os frontends listados na variável de ambiente CORS_ORIGENS para chamar esta API pelo navegador
+// (ex.: CORS_ORIGENS=https://zyra.vercel.app,http://localhost:5173); sem a variável, libera só o
+// Vite local em http://localhost:5173. Essa lista não é segredo, por isso pode ter valor padrão.
 // roda antes de tudo (HIGHEST_PRECEDENCE) para que até as respostas de erro levem os headers de CORS;
 // sem eles o navegador esconderia do frontend o {"message": "..."} do erro
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter extends OncePerRequestFilter {
 
-    private static final String ORIGEM_PERMITIDA = "http://localhost:5173";
     private static final String METODOS_PERMITIDOS = "GET, POST, PUT, DELETE, OPTIONS";
     private static final String HEADERS_PERMITIDOS = "Content-Type";
 
     // por quanto tempo (em segundos) o navegador pode guardar a resposta do preflight
     private static final String TEMPO_CACHE_PREFLIGHT = "3600";
+
+    // origens liberadas, já limpas; a comparação com o Origin da requisição é exata
+    private final Set<String> origensPermitidas;
+
+    public CorsFilter(@Value("${CORS_ORIGENS:http://localhost:5173}") String corsOrigens) {
+        // separa por vírgula, tira espaços e a barra final de cada item
+        // (o navegador manda o Origin sem barra: https://app.vercel.app) e descarta itens vazios
+        this.origensPermitidas = Arrays.stream(corsOrigens.split(","))
+                .map(String::trim)
+                .map(origem -> origem.replaceAll("/+$", ""))
+                .filter(origem -> !origem.isEmpty())
+                .collect(Collectors.toUnmodifiableSet());
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -33,10 +51,11 @@ public class CorsFilter extends OncePerRequestFilter {
         // a resposta muda conforme o Origin, então caches intermediários precisam saber disso
         response.addHeader("Vary", "Origin");
 
-        // só devolve os headers de CORS para a origem liberada; outras origens ficam sem eles
-        // e o próprio navegador bloqueia a leitura da resposta
-        if (ORIGEM_PERMITIDA.equals(origem)) {
-            response.setHeader("Access-Control-Allow-Origin", ORIGEM_PERMITIDA);
+        // só devolve os headers de CORS se o Origin estiver na lista; outras origens ficam sem eles
+        // e o próprio navegador bloqueia a leitura da resposta.
+        // devolve a própria origem da requisição, nunca "*"
+        if (origem != null && origensPermitidas.contains(origem)) {
+            response.setHeader("Access-Control-Allow-Origin", origem);
             response.setHeader("Access-Control-Allow-Methods", METODOS_PERMITIDOS);
             response.setHeader("Access-Control-Allow-Headers", HEADERS_PERMITIDOS);
             // deixa o JavaScript do frontend ler o header Location devolvido pelo POST

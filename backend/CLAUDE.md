@@ -102,6 +102,31 @@ spring.datasource.password=${DB_PASSWORD}
 
 Veja a regra de credenciais no `CLAUDE.md` da raiz. Nunca imprimir ou logar esses valores.
 
+## Deploy e variáveis de ambiente
+
+O backend roda no **Render** como serviço Docker: raiz em `backend/`, imagem gerada pelo
+`backend/Dockerfile` (build com `eclipse-temurin:21-jdk`, execução com `eclipse-temurin:21-jre`,
+usuário não-root, `-XX:MaxRAMPercentage=60`). O `Dockerfile` não tem `ENV` nem `ARG` com variável do
+banco: todas são configuradas no painel do Render e lidas quando o container roda.
+
+Variáveis além das do banco. **Nenhuma delas guarda segredo**, por isso podem ter valor padrão:
+
+| Variável       | Padrão                  | Uso                                                                                   |
+|----------------|-------------------------|---------------------------------------------------------------------------------------|
+| `PORT`         | `8080`                  | Porta do servidor (`server.port=${PORT:8080}`). O Render define sozinho.               |
+| `CORS_ORIGENS` | `http://localhost:5173` | Origens liberadas no `CorsFilter`, separadas por vírgula. Comparação exata, nunca `*`. |
+
+Regras do `CORS_ORIGENS`:
+
+- Em produção, usar `https` e **sem barra no final**: `https://zyra.vercel.app` (o `CorsFilter`
+  também remove a barra final de cada item, por segurança).
+- Liberar **só o domínio de produção** da Vercel. Os endereços de preview mudam a cada deploy e
+  ficam bloqueados de propósito.
+- Deve bater com o domínio do frontend que usa o `VITE_API_URL` (ver `frontend/CLAUDE.md`).
+
+As variáveis do banco (`DB_URL`, `DB_USER`, `DB_PASSWORD`) continuam sem valor padrão e seguem a
+regra de credenciais do `CLAUDE.md` da raiz.
+
 ## Testes
 
 Não criar testes automatizados até a desenvolvedora pedir.
