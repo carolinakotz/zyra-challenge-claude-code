@@ -60,6 +60,8 @@
   --shadow-cartao-hover: 0 8px 28px rgba(60, 88, 74, 0.2);
   --shadow-calculadora: 0 4px 24px rgba(60, 88, 74, 0.18);
   --shadow-print: 0 8px 32px rgba(60, 88, 74, 0.2);
+  /* círculo com o número do passo (página Sobre) */
+  --shadow-numero: 0 2px 8px rgba(0, 0, 0, 0.15);
   --shadow-botao: 0 2px 8px rgba(154, 74, 97, 0.25);
   --shadow-botao-hover: 0 6px 20px rgba(154, 74, 97, 0.35);
   --shadow-botao-forte: 0 2px 8px rgba(154, 74, 97, 0.3);
