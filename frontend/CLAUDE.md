@@ -20,7 +20,8 @@ src/
 │   ├── missaoService.ts
 │   └── usuarioService.ts
 ├── types/                 # tipos TS que espelham os DTOs do backend
-└── hooks/                 # hooks customizados (useMissoes, useUsuario...)
+├── hooks/                 # hooks customizados (useMissoes, useUsuario...)
+└── utils/                 # funções puras, sem React e sem chamar a API (ex.: converterId)
 ```
 
 ## Regras

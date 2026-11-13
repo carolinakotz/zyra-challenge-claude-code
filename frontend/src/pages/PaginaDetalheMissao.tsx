@@ -3,45 +3,16 @@ import { Link, useParams } from 'react-router'
 import { useFetch } from '../hooks/useFetch'
 import { buscarMissao } from '../services/missaoService'
 import EstadoRequisicao from '../components/EstadoRequisicao'
+import AlertaSemRepeticao from '../components/AlertaSemRepeticao'
+import LinkVoltar from '../components/LinkVoltar'
+import { converterId } from '../utils/converterId'
 import type { MissaoSaidaDTO } from '../types/missao'
 
 const CLASSES_FOCO =
   'focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-bg'
 
-// converte o id da URL; devolve null se não for um inteiro positivo ("abc", "1.5", "-3", "1e2")
-function converterId(texto: string | undefined): number | null {
-  if (texto === undefined || !/^\d+$/.test(texto)) return null
-  const numero = Number(texto)
-  return numero > 0 ? numero : null
-}
-
-function LinkVoltar() {
-  return (
-    <Link
-      to="/missoes"
-      className={`inline-flex items-center gap-2 self-start rounded-controle text-brand hover:text-hover hover:underline ${CLASSES_FOCO}`}
-    >
-      <i className="fa-solid fa-arrow-left" aria-hidden="true" />
-      Voltar para a lista
-    </Link>
-  )
-}
-
-// erro em que tentar de novo não resolve (id inválido, missão inexistente): só oferece voltar
-function AlertaSemRepeticao({ mensagem }: { mensagem: string }) {
-  return (
-    <div className="flex flex-col gap-6">
-      <p
-        role="alert"
-        className="flex items-start gap-3 rounded-cartao border border-erro-borda bg-erro-fundo p-6 text-erro-texto"
-      >
-        <i className="fa-solid fa-circle-exclamation mt-1" aria-hidden="true" />
-        <span>{mensagem}</span>
-      </p>
-      <LinkVoltar />
-    </div>
-  )
-}
+// o mesmo link aparece no topo da página e nos alertas sem repetição
+const voltarParaLista = <LinkVoltar para="/missoes">Voltar para a lista</LinkVoltar>
 
 function ConteudoMissao({ missao }: { missao: MissaoSaidaDTO }) {
   const pontos = missao.conquista?.pontosRecompensa
@@ -101,12 +72,12 @@ function DetalheMissao({ id }: { id: number }) {
 
   // 404: a missão não existe, tentar de novo não resolve
   if (erro?.status === 404) {
-    return <AlertaSemRepeticao mensagem={erro.message} />
+    return <AlertaSemRepeticao mensagem={erro.message} acao={voltarParaLista} />
   }
 
   return (
     <div className="flex flex-col gap-6">
-      <LinkVoltar />
+      {voltarParaLista}
       {/* um detalhe nunca fica "vazio": o componente só cuida de carregando e erro */}
       <EstadoRequisicao
         carregando={carregando}
@@ -127,7 +98,7 @@ function PaginaDetalheMissao() {
   const idNumero = converterId(id)
 
   if (idNumero === null) {
-    return <AlertaSemRepeticao mensagem="Endereço de missão inválido." />
+    return <AlertaSemRepeticao mensagem="Endereço de missão inválido." acao={voltarParaLista} />
   }
 
   // ao ir de /missoes/1 para /missoes/2 o componente é reaproveitado:
