@@ -10,11 +10,15 @@ interface EstadoRequisicaoProps {
   // texto e ação do estado vazio vêm de fora, para o componente servir a qualquer tela
   mensagemVazio: string
   acaoVazio?: ReactNode
-  // lido só por leitores de tela enquanto carrega
   textoCarregando?: string
   // conteúdo real, mostrado quando nenhum dos estados acima se aplica
   children: ReactNode
 }
+
+// bloco centralizado com ícone e texto, igual para os três estados
+const CLASSES_CAIXA =
+  'mx-auto flex w-full max-w-[60rem] flex-col items-center gap-[1.6rem] px-[1.6rem] py-[4rem] text-center tablet:py-[5rem]'
+const CLASSES_TEXTO = 'font-texto text-[1.5rem] leading-[1.7] text-text-dark tablet:text-[1.6rem]'
 
 // mostra carregando, erro ou vazio; se nenhum deles valer, mostra o conteúdo (children)
 function EstadoRequisicao({
@@ -24,40 +28,27 @@ function EstadoRequisicao({
   aoTentarNovamente,
   mensagemVazio,
   acaoVazio,
-  textoCarregando = 'Carregando…',
+  textoCarregando = 'Carregando...',
   children,
 }: EstadoRequisicaoProps) {
   if (carregando) {
     return (
-      <div role="status" aria-busy="true">
-        <span className="sr-only">{textoCarregando}</span>
-        {/* blocos cinza no lugar do conteúdo, para a tela não "pular" quando ele chegar */}
-        <div className="grid gap-6 tablet:grid-cols-2 desktop:grid-cols-3" aria-hidden="true">
-          {[1, 2, 3].map((n) => (
-            <div
-              key={n}
-              className="h-48 animate-pulse rounded-cartao bg-card-gray motion-reduce:animate-none"
-            />
-          ))}
-        </div>
+      <div role="status" className={CLASSES_CAIXA}>
+        <i className="fa-solid fa-spinner fa-spin text-[2.8rem] text-icon" aria-hidden="true" />
+        <p className={CLASSES_TEXTO}>{textoCarregando}</p>
       </div>
     )
   }
 
   if (erro) {
     return (
-      <div
-        role="alert"
-        className="flex flex-col items-start gap-4 rounded-cartao border border-erro-borda bg-erro-fundo p-6 text-erro-texto mobile-lg:flex-row mobile-lg:items-center"
-      >
-        <p className="flex flex-1 items-start gap-3">
-          <i className="fa-solid fa-circle-exclamation mt-1" aria-hidden="true" />
-          <span>{erro.message}</span>
-        </p>
+      <div role="alert" className={CLASSES_CAIXA}>
+        <i className="fa-solid fa-triangle-exclamation text-[2.8rem] text-brand" aria-hidden="true" />
+        <p className={CLASSES_TEXTO}>{erro.message}</p>
         <button
           type="button"
           onClick={aoTentarNovamente}
-          className="rounded-full bg-button-pink px-6 py-2 font-bold text-text-light-yellow transition-colors duration-150 hover:bg-brand focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-bg motion-reduce:transition-none"
+          className="rounded-controle bg-button-pink p-[1rem_2.8rem] font-texto text-[1.5rem] font-semibold text-white shadow-botao-forte transition-[transform,box-shadow] duration-200 hover:scale-105 hover:shadow-botao-forte-hover"
         >
           Tentar novamente
         </button>
@@ -67,9 +58,9 @@ function EstadoRequisicao({
 
   if (vazio) {
     return (
-      <div className="flex flex-col items-start gap-3 rounded-cartao bg-card-light-green p-8">
-        <i className="fa-solid fa-seedling text-subtitulo text-icon" aria-hidden="true" />
-        <p className="max-w-texto text-corpo-grande font-light text-text-dark">{mensagemVazio}</p>
+      <div role="status" className={CLASSES_CAIXA}>
+        <i className="fa-regular fa-folder-open text-[2.8rem] text-icon" aria-hidden="true" />
+        <p className={CLASSES_TEXTO}>{mensagemVazio}</p>
         {acaoVazio}
       </div>
     )
