@@ -30,12 +30,12 @@ const router = createBrowserRouter([
       { path: 'integrantes', element: <PaginaIntegrantes /> },
       { path: 'faq', element: <PaginaFaq /> },
       { path: 'contato', element: <PaginaContato /> },
+      // "nova" é texto fixo, então tem prioridade sobre ":id"
+      { path: 'missoes/nova', element: <PaginaCadastroMissao /> },
       // rota sem path: só envolve as páginas filhas no container centralizado
       {
         element: <ContainerPagina />,
         children: [
-          // "nova" é texto fixo, então tem prioridade sobre ":id"
-          { path: 'missoes/nova', element: <PaginaCadastroMissao /> },
           { path: 'missoes/:id', element: <PaginaDetalheMissao /> },
           { path: 'missoes/:id/editar', element: <PaginaEdicaoMissao /> },
         ],
