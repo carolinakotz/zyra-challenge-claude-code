@@ -52,7 +52,11 @@ async function requisitar<T>(caminho: string, opcoes: RequestInit = {}): Promise
         ...opcoes.headers,
       },
     })
-  } catch {
+  } catch (erro) {
+    // cancelamento pedido por quem chamou (AbortController): repassa o erro original,
+    // para não virar a mensagem de "sem conexão"
+    if (opcoes.signal?.aborted) throw erro
+
     // o fetch só rejeita quando não há resposta nenhuma (servidor fora do ar, sem rede, CORS)
     throw new ErroApi('Não foi possível conectar ao servidor. Verifique sua conexão.', 0)
   }
@@ -70,9 +74,9 @@ async function requisitar<T>(caminho: string, opcoes: RequestInit = {}): Promise
   return (await resposta.json()) as T
 }
 
-// GET
-export function obter<T>(caminho: string): Promise<T> {
-  return requisitar<T>(caminho)
+// GET (signal opcional, para poder cancelar a busca)
+export function obter<T>(caminho: string, signal?: AbortSignal): Promise<T> {
+  return requisitar<T>(caminho, { signal })
 }
 
 // POST (cadastro) ou PUT (edição), com corpo em JSON

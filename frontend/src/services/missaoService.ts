@@ -5,13 +5,13 @@ import type { MissaoEntradaDTO, MissaoSaidaDTO } from '../types/missao'
 const CAMINHO = '/missoes'
 
 // GET /missoes -> MissaoResource.listarTodos()
-export function listarMissoes(): Promise<MissaoSaidaDTO[]> {
-  return obter<MissaoSaidaDTO[]>(CAMINHO)
+export function listarMissoes(signal?: AbortSignal): Promise<MissaoSaidaDTO[]> {
+  return obter<MissaoSaidaDTO[]>(CAMINHO, signal)
 }
 
 // GET /missoes/{id} -> MissaoResource.buscarPorId(id)
-export function buscarMissao(id: number): Promise<MissaoSaidaDTO> {
-  return obter<MissaoSaidaDTO>(`${CAMINHO}/${id}`)
+export function buscarMissao(id: number, signal?: AbortSignal): Promise<MissaoSaidaDTO> {
+  return obter<MissaoSaidaDTO>(`${CAMINHO}/${id}`, signal)
 }
 
 // POST /missoes?pontos= -> MissaoResource.cadastrar(dto, pontos)
