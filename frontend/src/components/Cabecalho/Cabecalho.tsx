@@ -37,6 +37,11 @@ function Cabecalho() {
                 Missões
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/integrantes" className={classesItem}>
+                Integrantes
+              </NavLink>
+            </li>
           </ul>
         </nav>
       </div>
