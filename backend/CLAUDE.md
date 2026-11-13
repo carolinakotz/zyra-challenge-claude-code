@@ -77,6 +77,8 @@ Os nomes dos campos do JSON não podem mudar, porque o frontend depende deles.
 
 - Missão: `id`, `nomeMissao`, `requisito`, `conquista`
 - Conquista: `idConquista`, `pontosRecompensa`, `idMissao`
+- Erro: **todo** erro da API (400, 404, 500...) tem o formato `{"message": "..."}` (`ErroSaidaDTO`),
+  com a mensagem em português com acento. Nenhuma resposta de erro sai em outro formato.
 
 ## Prefixo `ZYRA2_` no banco
 
