@@ -8,6 +8,7 @@ import AlertaSemRepeticao from '../components/AlertaSemRepeticao'
 import LinkVoltar from '../components/LinkVoltar'
 import { converterId } from '../utils/converterId'
 import type { MissaoSaidaDTO } from '../types/missao'
+import type { AvisoNavegacao } from '../types/navegacao'
 
 const CLASSES_FOCO =
   'focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-bg'
@@ -45,10 +46,11 @@ function ConteudoMissao({ missao }: { missao: MissaoSaidaDTO }) {
 
     // replace: o detalhe da missão apagada sai do histórico, então o Voltar do navegador
     // não reabre uma missão que não existe mais
-    navigate('/missoes', {
-      replace: true,
-      state: { mensagemSucesso: 'Missão excluída com sucesso.' },
-    })
+    const aviso: AvisoNavegacao = {
+      mensagem: `Missão "${missao.nomeMissao}" excluída com sucesso!`,
+      tipo: 'sucesso',
+    }
+    navigate('/missoes', { replace: true, state: aviso })
   }
 
   return (

@@ -6,33 +6,20 @@ import SecaoCalculadora from '../components/SecaoCalculadora'
 import SecaoConquistas from '../components/SecaoConquistas'
 import SecaoMissoes from '../components/SecaoMissoes'
 import Separador from '../components/Separador'
-
-// formato do state que as telas de cadastro/edição/exclusão mandam ao voltar para cá
-interface EstadoComMensagem {
-  mensagemSucesso: string
-}
-
-// location.state é unknown: confere o formato antes de usar
-function temMensagemSucesso(estado: unknown): estado is EstadoComMensagem {
-  return (
-    typeof estado === 'object' &&
-    estado !== null &&
-    'mensagemSucesso' in estado &&
-    typeof estado.mensagemSucesso === 'string'
-  )
-}
+import { ehAvisoNavegacao } from '../types/navegacao'
 
 // cada seção controla a própria largura e os próprios espaçamentos, como no projeto original
 function PaginaMissoes() {
+  // aviso mandado por outra tela (missão cadastrada, editada, excluída ou não encontrada)
   const location = useLocation()
-  const mensagemSucesso = temMensagemSucesso(location.state) ? location.state.mensagemSucesso : null
+  const aviso = ehAvisoNavegacao(location.state) ? location.state : null
 
   return (
     <>
       <HeroMissoes />
-      {mensagemSucesso && (
+      {aviso && (
         <div className="px-[1.6rem] pt-[2.4rem] tablet:px-[3.2rem]">
-          <MensagemRetorno tipo="sucesso" texto={mensagemSucesso} />
+          <MensagemRetorno tipo={aviso.tipo} texto={aviso.mensagem} />
         </div>
       )}
       <Separador />

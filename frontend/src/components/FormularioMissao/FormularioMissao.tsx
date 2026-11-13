@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import { ErroApi } from '../../services/api'
 import { atualizarMissao, cadastrarMissao } from '../../services/missaoService'
 import type { MissaoEntradaDTO, MissaoSaidaDTO } from '../../types/missao'
+import type { AvisoNavegacao } from '../../types/navegacao'
 
 // no cadastro não existe missão ainda; na edição a página já buscou e passa a missão pronta
 type FormularioMissaoProps = { modo: 'cadastro' } | { modo: 'edicao'; missao: MissaoSaidaDTO }
@@ -78,22 +79,22 @@ function FormularioMissao(props: FormularioMissaoProps) {
       requisito: valores.requisito.trim(),
     }
 
-    let mensagemSucesso: string
+    let aviso: AvisoNavegacao
     try {
       if (props.modo === 'cadastro') {
-        await cadastrarMissao(dados, valores.pontos)
-        mensagemSucesso = 'Missão cadastrada com sucesso.'
+        const criada = await cadastrarMissao(dados, valores.pontos)
+        aviso = { mensagem: `Missão "${criada.nomeMissao}" cadastrada com sucesso!`, tipo: 'sucesso' }
       } else {
-        await atualizarMissao(props.missao.id, dados)
-        mensagemSucesso = 'Missão atualizada com sucesso.'
+        const atualizada = await atualizarMissao(props.missao.id, dados)
+        aviso = { mensagem: `Missão "${atualizada.nomeMissao}" atualizada com sucesso!`, tipo: 'sucesso' }
       }
     } catch (e) {
       setErroApi(e instanceof ErroApi ? e.message : 'Ocorreu um erro inesperado.')
       return
     }
 
-    // a lista lê mensagemSucesso do location.state e mostra o alerta de sucesso
-    navigate('/missoes', { state: { mensagemSucesso } })
+    // a lista lê o aviso do location.state e mostra a mensagem no topo
+    navigate('/missoes', { state: aviso })
   }
 
   const textoBotao =
