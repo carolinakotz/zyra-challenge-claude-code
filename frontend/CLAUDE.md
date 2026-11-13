@@ -64,7 +64,7 @@ Ver seção "Idiomas" no `CLAUDE.md` da raiz.
 - Tipos com os mesmos nomes dos DTOs do backend (`MissaoSaidaDTO`, `MissaoEntradaDTO`).
 - Tokens de design: os de cor herdados da identidade original ficam em inglês (`bg`, `brand`,
   `card-gray`, `text-dark`...); os de feedback e os criados no Zyra ficam em português (`erro-texto`,
-  `titulo-card`, `shadow-cartao`). Ver seção "Design".
+  `corpo-grande`, `shadow-cartao`). Ver seção "Design".
 - Comentários em português simples.
 - TypeScript estrito; evitar `any`. Apenas componentes funcionais com hooks.
 
@@ -74,8 +74,8 @@ O Zyra reproduz o design do projeto original (`challenge-front-end-sprint-3-4/zy
 privado da Carolina). Ao recriar uma tela, copiar o JSX e as classes do componente de mesmo nome no original,
 trocando só os nomes de token da tabela abaixo. Textos da tela também iguais ao original.
 
-Todas as telas já estão no design original: Início, Sobre, Missões (lista, cadastro, detalhe e edição),
-Integrantes, FAQ, Contato e a página de erro. Faltam só o cabeçalho e o rodapé.
+Todo o frontend já está no design original: cabeçalho (com menu hambúrguer abaixo de 992px), rodapé, Início,
+Sobre, Missões (lista, cadastro, detalhe e edição), Integrantes, FAQ, Contato e a página de erro.
 
 ### Tokens (definidos no `@theme` de `src/index.css`)
 
@@ -83,7 +83,10 @@ Integrantes, FAQ, Contato e a página de erro. Faltam só o cabeçalho e o rodap
   (`bg-blue-500`, `text-sm`, `md:` não existem). Cor e sombra só por token: nenhum hex ou `rgba` solto em
   componente. Tamanhos e espaçamentos podem usar valores arbitrários como no original (`text-[1.5rem]`,
   `px-[1.6rem]`, `max-w-[1300px]`).
-- 1rem = 10px (html a 62.5%). `p-4` = 16px, como no Tailwind padrão.
+- 1rem = 10px (html a 62.5%), igual ao original. Mas o `--spacing` é diferente: no Zyra é `0.4rem`
+  (`p-4` = 16px); no original é o padrão do Tailwind, `0.25rem` (`p-4` = 10px). Por isso, ao copiar uma classe
+  numérica de espaçamento do original (`px-6`, `gap-16`, `py-10`...), trocar pelo valor exato em rem
+  (N × 0,25rem): `px-6` → `px-[1.5rem]`, `gap-16` → `gap-[4rem]`. Valores 0 e arbitrários (`p-[2rem]`) não mudam.
 - Breakpoints mobile-first: `mobile-lg:` (481px), `tablet:` (768px), `desktop:` (992px).
 
 Tradução dos nomes do original para o Zyra:
